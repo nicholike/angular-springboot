@@ -1,0 +1,237 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<div class="container mx-auto p-4">
+    <!-- Tab Navigation -->
+<!-- Thêm nút tab mới -->
+<div class="mb-4">
+  <button 
+    class="px-4 py-2 mr-2"
+    [class.bg-blue-500]="activeTab === 'products'"
+    [class.bg-gray-200]="activeTab !== 'products'"
+    (click)="switchTab('products')">
+    Product Management
+  </button>
+  <button 
+    class="px-4 py-2 mr-2"
+    [class.bg-blue-500]="activeTab === 'categories'"
+    [class.bg-gray-200]="activeTab !== 'categories'"
+    (click)="switchTab('categories')">
+    Category Management
+  </button>
+  <button 
+    class="px-4 py-2"
+    [class.bg-blue-500]="activeTab === 'users'"
+    [class.bg-gray-200]="activeTab !== 'users'"
+    (click)="switchTab('users')">
+    User Management
+  </button>
+</div>
+
+<!-- User Management Section -->
+<div *ngIf="activeTab === 'users'" class="user-management">
+  <h2 class="text-2xl mb-4">User Management</h2>
+  
+  <!-- User Form -->
+  <form [formGroup]="userForm" (ngSubmit)="onUserSubmit()" class="mb-4">
+    <div class="grid grid-cols-2 gap-4">
+      <input 
+        formControlName="username" 
+        placeholder="Username" 
+        class="border p-2"
+        [readOnly]="selectedUser !== null"
+      >
+      <input 
+        formControlName="email" 
+        placeholder="Email" 
+        class="border p-2"
+      >
+      <input 
+        formControlName="name" 
+        placeholder="Full Name" 
+        class="border p-2"
+      >
+      <select formControlName="role" class="border p-2">
+        <option value="USER">User</option>
+        <option value="ADMIN">Admin</option>
+      </select>
+      <input 
+        formControlName="address" 
+        placeholder="Address" 
+        class="border p-2 col-span-2"
+      >
+      <input 
+      formControlName="phone" 
+      placeholder="Phone" 
+      class="border p-2 col-span-2"
+    >
+    </div>
+    <button 
+      type="submit" 
+      class="bg-green-500 text-green px-4 py-2 mt-2"
+      [disabled]="userForm.invalid">
+      {{ selectedUser ? 'Update User' : 'Create User' }}
+    </button>
+  </form>
+
+  <!-- User List -->
+  <table class="w-full border"> 
+    <thead>
+      <tr>
+        <th class="border p-2">Username</th>
+        <th class="border p-2">Email</th>
+        <th class="border p-2">Role</th>
+        <th class="border p-2">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td class="border p-2">{{ user.username }}</td>
+        <td class="border p-2">{{ user.email }}</td>
+        <td class="border p-2">{{ user.role }}</td>
+        <td class="border p-2">
+          <button 
+            (click)="editUser(user)" 
+            class="bg-blue-500 text-green px-2 py-1 mr-2">
+            Edit
+          </button>
+          <button 
+            (click)="deleteUser(user.id)" 
+            class="bg-red-500 text-green px-2 py-1">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  
+    <!-- Product Management Section -->
+    <div *ngIf="activeTab === 'products'" class="product-management">
+      <h2 class="text-2xl mb-4">Product Management</h2>
+      
+      <!-- Product Form -->
+      <form [formGroup]="productForm" (ngSubmit)="onProductSubmit()" class="mb-4">
+        <div class="grid grid-cols-2 gap-4">
+          <input 
+            formControlName="name" 
+            placeholder="Product Name" 
+            class="border p-2"
+          >
+          <input 
+            formControlName="description" 
+            placeholder="Description" 
+            class="border p-2"
+          >
+          <input 
+            type="number" 
+            formControlName="price" 
+            placeholder="Price" 
+            class="border p-2"
+          >
+          <select formControlName="categoryId" class="border p-2">
+            <option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+          <input 
+            type="file" 
+            (change)="onProductImageSelect($event)" 
+            class="border p-2"
+          >
+        </div>
+        <button 
+          type="submit" 
+          class="bg-green-500 text-green px-4 py-2 mt-2"
+          [disabled]="productForm.invalid">
+          {{ selectedProduct ? 'Update Product' : 'Create Product' }}
+        </button>
+      </form>
+  
+      <!-- Product List -->
+      <table class="w-full border"> 
+        <thead>
+          <tr>
+            <th class="border p-2">Name</th>
+            <th class="border p-2">Description</th>
+            <th class="border p-2">Price</th>
+            <th class="border p-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of products">
+            <td class="border p-2">{{ product.name }}</td>
+            <td class="border p-2">{{ product.description }}</td>
+            <td class="border p-2">{{ product.price }}</td>
+            <td class="border p-2">
+              <button 
+                (click)="editProduct(product)" 
+                class="bg-blue-500 text-green px-2 py-1 mr-2">
+                Edit
+              </button>
+              <button 
+                (click)="deleteProduct(product.id)" 
+                class="bg-red-500 text-green px-2 py-1">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Category Management Section -->
+    <div *ngIf="activeTab === 'categories'" class="category-management">
+      <h2 class="text-2xl mb-4">Category Management</h2>
+      
+      <!-- Category Form -->
+      <form [formGroup]="categoryForm" (ngSubmit)="onCategorySubmit()" class="mb-4">
+        <div class="grid grid-cols-2 gap-4">
+          <input 
+            formControlName="name" 
+            placeholder="Category Name" 
+            class="border p-2"
+          >
+          <input 
+            formControlName="description" 
+            placeholder="Description" 
+            class="border p-2"
+          >
+        </div>
+        <button 
+          type="submit" 
+          class="bg-green-500 text-green px-4 py-2 mt-2"
+          [disabled]="categoryForm.invalid">
+          {{ selectedCategory ? 'Update Category' : 'Create Category' }}
+        </button>
+      </form>
+  
+      <!-- Category List -->
+      <table class="w-full border">
+        <thead>
+          <tr>
+            <th class="border p-2">Name</th>
+            <th class="border p-2">Description</th>
+            <th class="border p-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let category of categories">
+            <td class="border p-2">{{ category.name }}</td>
+            <td class="border p-2">{{ category.description }}</td>
+            <td class="border p-2">
+              <button 
+                (click)="editCategory(category)" 
+                class="bg-blue-500 text-green px-2 py-1 mr-2">
+                Edit
+              </button>
+              <button 
+                (click)="deleteCategory(category.id)" 
+                class="bg-red-500 text-green px-2 py-1">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

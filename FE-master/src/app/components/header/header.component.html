@@ -1,0 +1,69 @@
+<!-- Start Header/Navigation -->
+<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
+    <div class="container">
+        <a class="navbar-brand" href="/">Furni<span>.</span></a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni"
+            aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsFurni">
+            <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" routerLink="/home">Trang chủ</a>
+                </li>
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" routerLink="/about">Về chúng tôi</a>
+                </li>
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" routerLink="/contact">Liên hệ</a>
+                </li>
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" routerLink="/blog">blog</a>
+                </li>
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" routerLink="/products">shop</a>
+                </li>
+            </ul>
+            <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
+                <li class="nav-item dropdown">
+                    <!-- User Icon -->
+                    <a class="nav-link" (click)="toggleUserMenu()">
+                        <img src="./assets/images/user.svg">
+                    </a>
+
+                    <!-- Dropdown Menu -->
+                    <div *ngIf="showUserMenu" class="dropdown-menu show">
+                        <!-- Logged-in State -->
+                        <ng-container *ngIf="userInfo; else loginPrompt">
+                            <div class="user-info p-2">
+                                <p class="mb-1">{{ userInfo.data.name }}</p>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item" (click)="navigateToChangePassword()">
+                                Đổi mật khẩu
+                            </button>
+                            <button class="dropdown-item" (click)="logout()">
+                                Đăng xuất
+                            </button>
+                        </ng-container>
+
+                        <!-- Login Prompt for Logged-out State -->
+                        <ng-template #loginPrompt>
+                            <div class="user-info p-2">
+                                <p class="mb-1">Bạn chưa đăng nhập</p>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item" (click)="navigateToLogin()">
+                                Đăng nhập
+                            </button>
+                        </ng-template>
+                    </div>
+                </li>
+                <li><a class="nav-link" href="/cart"><img src="./assets/images/cart.svg"></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- End Header/Navigation -->

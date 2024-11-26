@@ -1,0 +1,67 @@
+<div class="untree_co-section product-details-section">
+    <div class="container">
+        <!-- Loading Spinner -->
+        <div *ngIf="isLoading" class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Đang tải...</span>
+            </div>
+            <p>Đang tải chi tiết sản phẩm...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="hasError" class="alert alert-danger">
+            {{ errorMessage }}
+        </div>
+
+        <!-- Product Details -->
+        <div *ngIf="!isLoading && product" class="row">
+            <div class="col-md-6">
+                <div class="product-image">
+                    <img [src]="product.image || './assets/images/default-product.png'" class="img-fluid"
+                        alt="{{ product.name }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="product-details">
+                    <h1 class="product-title">{{ product.name }}</h1>
+
+                    <!-- Product Description -->
+                    <div class="product-description">
+                        <h4>Mô tả sản phẩm</h4>
+                        <p [innerHTML]="product.description "></p>
+                    </div>
+
+                    <!-- Price Section -->
+                    <div class="product-price-section mt-3">
+                        <h4>Giá</h4>
+                        <strong class="product-price h3">
+                            {{ product.price.toLocaleString('vi-VN') }} VND
+                        </strong>
+                    </div>
+
+                    <!-- Quantity Selector -->
+                    <div class="product-quantity mt-4">
+                        <h4>Số lượng</h4>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-outline-secondary btn-sm me-2" (click)="decreaseQuantity()">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <span class="quantity-display">{{ quantity }}</span>
+                            <button class="btn btn-outline-secondary btn-sm ms-2" (click)="increaseQuantity()">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Add to Cart -->
+                    <div class="product-actions mt-4">
+                        <button class="btn btn-primary btn-lg" (click)="addToCart()">
+                            <i class="bi bi-cart-plus me-2"></i>
+                            Thêm vào giỏ hàng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

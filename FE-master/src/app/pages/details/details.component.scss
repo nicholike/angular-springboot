@@ -1,0 +1,34 @@
+.btn-outline-secondary {
+    border-color: #aaa; /* Màu viền nhẹ nhàng hơn */
+    color: #555;       /* Màu chữ trung tính */
+    background-color: transparent; /* Nền trong suốt */
+    padding: 0.4rem 1rem; /* Giảm kích thước padding */
+    border-radius: 5px; /* Bo tròn nhẹ */
+    transition: all 0.3s ease; /* Thêm hiệu ứng mượt khi hover */
+}
+
+.btn-outline-secondary:hover {
+    background-color: #ddd; /* Đổi nền nhẹ khi hover */
+    color: #333;            /* Tăng độ nổi bật cho chữ */
+}
+
+.btn-primary {
+    background-color: #3498db; /* Màu xanh nhẹ hơn */
+    border-color: #3498db;     /* Màu viền cùng màu nền */
+    color: #fff;               /* Chữ trắng */
+    padding: 0.4rem 1rem;      /* Giảm padding */
+    border-radius: 5px;        /* Bo góc mềm mại */
+    transition: all 0.3s ease; /* Hiệu ứng mượt khi hover */
+}
+
+.btn-primary:hover {
+    background-color: #2980b9; /* Màu xanh đậm hơn khi hover */
+    border-color: #2980b9;     /* Viền đồng bộ với màu nền */
+}
+
+.quantity-display {
+    font-size: 1rem; /* Giảm kích thước chữ */
+    font-weight: normal; /* Loại bỏ độ đậm */
+    margin: 0 0.5rem;
+    color: #333; /* Màu chữ nhẹ nhàng hơn */
+}

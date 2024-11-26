@@ -1,0 +1,22 @@
+.product-image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.delete-overlay {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 3px 5px;
+}
+
+.product-image-container:hover .delete-overlay {
+    opacity: 1;
+}
+
+.product-image {
+    max-width: 100px;
+    height: auto;
+}
