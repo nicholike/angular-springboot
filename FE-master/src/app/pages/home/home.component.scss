@@ -1,0 +1,87 @@
+.testimonial-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.testimonial-slider {
+    display: flex;
+    transition: transform 0.5s ease;
+    width: 500%; /* Accommodate multiple slides */
+}
+
+.testimonial-item {
+    flex: 0 0 20%;
+    width: 20%;
+    text-align: center;
+    padding: 20px;
+}
+
+/* CSS-only slider navigation */
+.testimonial-nav {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.testimonial-radio {
+    display: none;
+}
+
+.testimonial-nav label {
+    width: 15px;
+    height: 15px;
+    background: #ddd;
+    border-radius: 50%;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.testimonial-radio:checked + label {
+    background: #333;
+}
+
+/* Slide logic with radio buttons */
+#slide1:checked ~ .testimonial-slider {
+    transform: translateX(0);
+}
+#slide2:checked ~ .testimonial-slider {
+    transform: translateX(-20%);
+}
+#slide3:checked ~ .testimonial-slider {
+    transform: translateX(-40%);
+}
+#slide4:checked ~ .testimonial-slider {
+    transform: translateX(-60%);
+}
+#slide5:checked ~ .testimonial-slider {
+    transform: translateX(-80%);
+}
+
+/* Auto-slide animation */
+.testimonial-container {
+    animation: slideshow 15s linear infinite;
+}
+
+@keyframes slideshow {
+    0%, 20% { transform: translateX(0); }
+    25%, 45% { transform: translateX(-20%); }
+    50%, 70% { transform: translateX(-40%); }
+    75%, 95% { transform: translateX(-60%); }
+    100% { transform: translateX(-80%); }
+}
+/* Resize ảnh trong các testimonial */
+.author-image {
+    width: 80px;  /* Điều chỉnh kích thước */
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Resize ảnh trong phần .author-pic */
+.author-pic img {
+    width: 100px;  /* Điều chỉnh kích thước */
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}

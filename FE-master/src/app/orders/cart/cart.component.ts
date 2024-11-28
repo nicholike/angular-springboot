@@ -5,6 +5,7 @@ import { ProductService } from '../../services/product.service';
 import { forkJoin } from 'rxjs';
 import { Router } from '@angular/router';
 import { TokenService } from '../../services/token.service';
+import { OrderService } from '../../services/order.service';
 
 export interface ExtendedCartItemResponse extends CartItemResponse {
   image?: string;
@@ -22,10 +23,12 @@ export interface ExtendedCartItemResponse extends CartItemResponse {
 export class CartComponent implements OnInit {
   cart: CartResponse | null = null;
   cartItemsWithDetails: ExtendedCartItemResponse[] = [];
+  orderHistory: any[] = []; // Store user's order history
+  activeView: 'cart' | 'orders' = 'cart';
   isLoading: boolean = true;
   hasError: boolean = false;
   errorMessage: string = '';
-  
+
   confirmAction: {
     type: 'update' | 'remove' | null;
     items: ExtendedCartItemResponse[];
@@ -35,8 +38,9 @@ export class CartComponent implements OnInit {
   };
 
   constructor(
-    private cartService: CartService,
+  private cartService: CartService,
     private productService: ProductService,
+    private orderService: OrderService,
     private tokenService: TokenService,
     private router: Router
   ) {}
@@ -52,6 +56,8 @@ export class CartComponent implements OnInit {
       }
     }
     this.fetchCartWithProductDetails();
+    this.fetchOrderHistory(); 
+    
   }
 
 
@@ -91,7 +97,70 @@ export class CartComponent implements OnInit {
       },
     });
   }
+  currentPage = 0;
+  totalPages = 0;
+  
+  fetchOrderHistory(page = 0): void {
+    this.isLoading = true;
+    this.orderService.getOrdersByUser(page).subscribe({
+      next: (response) => {
+        this.orderHistory = response.data.data.map(order => ({
+          ...order,
+          formattedDate: new Date(order.createdAt).toLocaleDateString('vi-VN'),
+          totalFormatted: order.totalAmount.toLocaleString('vi-VN')
+        }));
+        
+        // Update pagination info
+        this.currentPage = response.data.currentPage;
+        this.totalPages = response.data.totalPages;
+        
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Lỗi tải lịch sử đơn hàng', error);
+        this.hasError = true;
+        this.errorMessage = 'Không thể tải lịch sử đơn hàng';
+        this.isLoading = false;
+      }
+    });
+  }
+  
+  // Add pagination methods
+  nextPage(): void {
+    if (this.currentPage < this.totalPages - 1) {
+      this.fetchOrderHistory(this.currentPage + 1);
+    }
+  }
+  
+  prevPage(): void {
+    if (this.currentPage > 0) {
+      this.fetchOrderHistory(this.currentPage - 1);
+    }
+  }
+  // Method to view order details
+  viewOrderDetails(orderId: string): void {
+    this.router.navigate(['/order-details', orderId]);
+  }
 
+  // Switch between cart and order views
+  switchView(view: 'cart' | 'orders'): void {
+    this.activeView = view;
+    if (view === 'orders') {
+      this.fetchOrderHistory();
+    }
+  }
+
+  // Helper method to get order status label
+  getOrderStatusLabel(status: string): string {
+    const statusLabels: { [key: string]: string } = {
+      'PENDING': 'Chờ Xử Lý',
+      'CONFIRMED': 'Đã Xác Nhận',
+      'SHIPPING': 'Đang Vận Chuyển',
+      'COMPLETED': 'Hoàn Thành',
+      'CANCELLED': 'Đã Hủy'
+    };
+    return statusLabels[status] || status;
+  }
   increaseQuantity(cartItem: ExtendedCartItemResponse): void {
     const maxQuantity = 10; // Giới hạn số lượng tối đa
     if ((cartItem.tempQuantity || cartItem.quantity) < maxQuantity) {
@@ -126,14 +195,14 @@ export class CartComponent implements OnInit {
       this.cancelConfirmation();
       return;
     }
-
+  
     const updateRequests = itemsToUpdate.map(item => 
       this.cartService.updateCartItem({
         productId: item.productId,
         quantity: item.tempQuantity!
       })
     );
-
+  
     forkJoin(updateRequests).subscribe({
       next: (responses) => {
         const latestCartResponse = responses[responses.length - 1];
@@ -152,7 +221,6 @@ export class CartComponent implements OnInit {
       }
     });
   }
-
   cancelConfirmation(): void {
     this.cartItemsWithDetails.forEach(item => {
       if (item.hasUnsavedChanges) {
@@ -178,27 +246,19 @@ export class CartComponent implements OnInit {
     return this.cartItemsWithDetails.some(item => item.hasUnsavedChanges);
   }
     // Optional: You could add some validation here if needed
-    proceedToCheckout(): void {
-      // Optional: You could add some validation here if needed
-      this.router.navigate(['/order']);
-    }
-    confirmRemove(): void {
-      if (this.confirmAction.items.length === 0) {
-        this.cancelConfirmation();
-        return;
-      }
-    
-      const productIdsToRemove = this.confirmAction.items.map(item => item.productId);
-      
-      const removeObservables = productIdsToRemove.map(productId => 
-        this.cartService.removeFromCart(productId)
-      );
-    forkJoin(removeObservables).subscribe({
-    next: (responses) => {
-      // Lấy phản hồi cuối cùng để cập nhật giỏ hàng
-      const latestCartResponse = responses[responses.length - 1];
-      this.cart = latestCartResponse;
-      this.enhanceCartItemsWithImages(latestCartResponse.data.cartItems);
+  // Thêm method confirmRemove để xử lý xóa từng sản phẩm
+confirmRemove(): void {
+  if (this.confirmAction.items.length === 0) {
+    this.cancelConfirmation();
+    return;
+  }
+
+  const productIdToRemove = this.confirmAction.items[0].productId;
+  
+  this.cartService.removeFromCart(productIdToRemove).subscribe({
+    next: (cartResponse) => {
+      this.cart = cartResponse;
+      this.enhanceCartItemsWithImages(cartResponse.data.cartItems);
       
       this.confirmAction = { 
         type: null, 
@@ -212,4 +272,24 @@ export class CartComponent implements OnInit {
     }
   });
 }
+
+// Cập nhật method proceedToCheckout để kiểm tra điều kiện
+proceedToCheckout(): void {
+  if (this.cart && this.cart.data.cartItems.length > 0) {
+    // Kiểm tra xem có sản phẩm nào không
+    this.router.navigate(['/order'], {
+      state: { 
+        cartItems: this.cartItemsWithDetails,
+        totalPrice: this.calculateTotalPrice()
+      }
+    });
+  }
+}
+
+// Thêm phương thức tính tổng giá
+calculateTotalPrice(): number {
+  return this.cartItemsWithDetails.reduce((total, item) => 
+    total + (item.price * (item.tempQuantity || item.quantity)), 0);
+}
+
 }

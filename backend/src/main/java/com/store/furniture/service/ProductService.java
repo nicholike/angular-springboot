@@ -72,10 +72,13 @@ public class ProductService {
                 .findById(productUpdateRequest.getCategoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
-        productMapper.updateProduct(product, productUpdateRequest);
-        var urlImg = cloudinaryService.uploadImage(productUpdateRequest.getImage());
-        product.setImage(urlImg);
+        // Nếu có upload ảnh mới thì mới thay đổi
+        if (productUpdateRequest.getImage() != null && !productUpdateRequest.getImage().isEmpty()) {
+            var urlImg = cloudinaryService.uploadImage(productUpdateRequest.getImage());
+            product.setImage(urlImg);
+        }
 
+        productMapper.updateProduct(product, productUpdateRequest);
         return productMapper.toProductResponse(productRepository.save(product));
     }
 

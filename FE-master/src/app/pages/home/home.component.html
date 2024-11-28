@@ -12,7 +12,8 @@
                         Với thiết kế tinh tế và chất lượng cao cấp, sofa của chúng tôi không chỉ là nơi thư giãn tuyệt
                         vời mà còn là điểm nhấn nổi bật cho căn phòng.</p>
                     <p><a [routerLink]="['/products']" class="btn btn-secondary me-2">Mua ngay</a>
-                        <a [routerLink]="['/blog']" class="btn btn-white-outline">Khám phá ngay</a></p>
+                        <a [routerLink]="['/blog']" class="btn btn-white-outline">Khám phá ngay</a>
+                    </p>
                 </div>
             </div>
             <div class="col-lg-7">
@@ -55,14 +56,10 @@
 
             <!-- Product Columns -->
             <ng-container *ngIf="!isLoading && hasProducts">
-                <div *ngFor="let product of products" 
-                     class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+                <div *ngFor="let product of products" class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
                     <a class="product-item" [routerLink]="['/products', product.id]">
-                        <img 
-                            [src]="product.image || './assets/images/product-1.png'" 
-                            class="img-fluid product-thumbnail"
-                            alt="{{ product.name }}"
-                        >
+                        <img [src]="product.image || './assets/images/product-1.png'"
+                            class="img-fluid product-thumbnail" alt="{{ product.name }}">
                         <h3 class="product-title">{{ product.name }}</h3>
                         <strong class="product-price">${{ product.price.toFixed(2) }}</strong>
 
@@ -243,54 +240,95 @@
                 <p>Chúng tôi luôn đặt sự hài lòng của khách hàng lên hàng đầu. Vì vậy, chúng tôi luôn nỗ lực không ngừng
                     để mang đến những sản phẩm/dịch vụ chất lượng cao nhất, đáp ứng mọi nhu cầu của khách hàng.</p>
 
-                </div>
-        </div>
-
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="testimonial-slider-wrap text-center">
-
-                    <div id="testimonial-nav">
-                        <span class="prev" data-controls="prev"><span class="fa fa-chevron-left"></span></span>
-                        <span class="next" data-controls="next"><span class="fa fa-chevron-right"></span></span>
-                    </div>
-
-                    <div class="testimonial-slider">
-
-                        <div class="item">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-8 mx-auto">
-
-                                    <div class="testimonial-block text-center">
-                                        <blockquote class="mb-5">
-                                            <p>&ldquo;Tôi thực sự ấn tượng với chất lượng sản phẩm tại cửa hàng. Bộ sofa
-                                                góc mà tôi vừa mua không chỉ có thiết kế hiện đại, tinh tế mà còn vô
-                                                cùng thoải mái. Chất liệu da thật êm ái, đường may tỉ mỉ, xứng đáng với
-                                                từng đồng tiền bỏ ra. Cảm ơn cửa hàng đã mang đến cho gia đình tôi một
-                                                không gian sống đẳng cấp!&rdquo;</p>
-
-                                            </blockquote>
-
-                                        <div class="author-info">
-                                            <div class="author-pic">
-                                                <img src="./assets/images/person-1.png" alt="Maria Jones"
-                                                    class="img-fluid">
-                                            </div>
-                                            <h3 class="font-weight-bold">Phan Việt Nam</h3>
-                                            <span class="position d-block mb-3">CEO, Co-Founder.</span>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END item -->
-                    </div>
-
-                </div>
             </div>
         </div>
+
+        <input type="radio" name="slide" id="slide1" class="testimonial-radio" checked>
+        <input type="radio" name="slide" id="slide2" class="testimonial-radio">
+        <input type="radio" name="slide" id="slide3" class="testimonial-radio">
+        <input type="radio" name="slide" id="slide4" class="testimonial-radio">
+        <input type="radio" name="slide" id="slide5" class="testimonial-radio">
+
+        <div class="testimonial-slider">
+            <div class="testimonial-item">
+
+                <div class="author-info">
+                    <img src="./assets/images/person-1.png" alt="Phan Việt Nam" class="author-image">
+                    <h3>Phan Việt Nam</h3>
+                    <span>CEO, Co-Founder</span>
+                </div>
+                <blockquote>
+                    "Tôi thực sự ấn tượng với chất lượng sản phẩm tại cửa hàng. Bộ sofa góc mà tôi vừa mua không chỉ có
+                    thiết kế hiện đại, tinh tế mà còn vô cùng thoải mái."
+                </blockquote>
+            </div>
+
+            <div class="testimonial-item">
+
+                <div class="author-info">
+                    <img src="./assets/images/person_3.png" alt="Nguyễn Văn An" class="author-image">
+                    <h3>Nguyễn Văn An</h3>
+                    <span>Giám đốc Kinh doanh</span>
+                </div>
+                <blockquote>
+                    "Dịch vụ chăm sóc khách hàng của công ty rất chuyên nghiệp. Mọi yêu cầu của tôi đều được giải quyết
+                    nhanh chóng và hiệu quả."
+                </blockquote>
+            </div>
+
+            <div class="testimonial-item">
+
+                <div class="author-info">
+                    <img src="./assets/images/anh-profile-nam.png" alt="Nguyễn Duy Hoàng" class="author-image">
+                    <h3>Nguyễn Duy Hoàng</h3>
+                    <span>Nhà Thiết Kế</span>
+                </div>
+                <blockquote>
+                    "Sản phẩm của công ty luôn đáng tin cậy. Tôi đã sử dụng và giới thiệu cho nhiều người bạn."
+                </blockquote>
+            </div>
+
+            <div class="testimonial-item">
+
+                <div class="author-info">
+                    <img src="./assets/images/person_4.png" alt="Madison Mark" class="author-image">
+                    <h3>Madison Mark</h3>
+                    <span>Doanh Nhân</span>
+                </div>
+                <blockquote>
+                    "Great Product Come With Great Service ."
+                </blockquote>
+            </div>
+
+            <div class="testimonial-item">
+
+                <div class="author-info">
+                    <div class="author-pic">
+                        <img src="./assets/images/person_2.png" alt="Maria Jones" class="img-fluid">
+                    </div>
+                    <h3>Phan Việt Nam</h3>
+                    <span>CEO, Co-Founder.</span>
+                </div>
+                <blockquote>Tôi thực sự ấn tượng với chất lượng sản phẩm tại cửa hàng. Bộ sofa
+                    góc mà tôi vừa mua không chỉ có thiết kế hiện đại, tinh tế mà còn vô
+                    cùng thoải mái. Chất liệu da thật êm ái, đường may tỉ mỉ, xứng đáng với
+                    từng đồng tiền bỏ ra. Cảm ơn cửa hàng đã mang đến cho gia đình tôi một
+                    không gian sống đẳng cấp!
+                </blockquote>
+            </div>
+            
+
+        </div>
+
+        <div class="testimonial-nav">
+            <label for="slide1"></label>
+            <label for="slide2"></label>
+            <label for="slide3"></label>
+            <label for="slide4"></label>
+            <label for="slide5"></label>
+        </div>
     </div>
+
 </div>
 <!-- End Testimonial Slider -->
 
@@ -328,7 +366,7 @@
                     <div class="post-content-entry">
                         <h3><a href="#">Cách Giữ Gỗ Nội Thất Luôn Sạch Sẽ.
 
-                        </a></h3>
+                            </a></h3>
 
 
 

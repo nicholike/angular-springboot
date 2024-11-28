@@ -18,7 +18,7 @@ public class ProductCreationRequest {
     String name;
 
     @NotBlank(message = "DESCRIPTION_MANDATORY")
-    @Size(min = 10, message = "DESCRIPTION_SIZE")
+    @Size(min = 1, message = "DESCRIPTION_SIZE")
     String description;
 
     @NotNull(message = "PRICE_MANDATORY")

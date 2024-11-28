@@ -12,6 +12,8 @@ import com.store.furniture.exception.ErrorCode;
 import com.store.furniture.mapper.UserMapper;
 import com.store.furniture.repository.UserRepository;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -87,7 +89,11 @@ public class UserService {
         User user = userRepository
                 .findByUsername(authenticatedUsername)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
+        Optional.ofNullable(userUpdateRequest.getAddress())
+                .ifPresent(user::setAddress);
 
+        Optional.ofNullable(userUpdateRequest.getPhone())
+                .ifPresent(user::setPhone);
         userMapper.updateUser(user, userUpdateRequest);
         return userMapper.toResponse(userRepository.save(user));
     }
